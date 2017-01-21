@@ -10,12 +10,16 @@ Rails.application.routes.draw do
     end
   end
 
-  resources 'items', only: [:index, :show]
+  get '/items', to: 'items#index', as: 'items'
+  get 'items/:id', to: 'items#show', as: 'item'
   post '/retired_item', to: 'items#reject', as: 'retired_item'
 
-  resources :orders, only: [:index, :show, :create, :update]
+  get '/orders', to: 'orders#index', as: 'orders'
+  get '/orders/:id', to: 'orders#show', as: 'order'
+  post '/orders', to: 'orders#create'
+  put '/orders/:id', to: 'orders#update'
 
-  resources :carts, only: [:create]
+  post '/carts', to: 'carts#create'
   put    '/carts', to: 'carts#update'
   delete '/carts', to: 'carts#destroy'
   get    '/cart', to: 'carts#index'
@@ -24,14 +28,17 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  resources :users, only: [:new, :create, :edit, :update] 
+  get '/users/new', to: 'users#new', as: 'new_user'
+  get '/users/:id/edit', to: 'users#edit', as: 'edit_user'
+  post '/users', to: 'users#create'
+  patch '/users/:id', to: 'users#update', as: 'user'
   
   get '/dashboard', to: 'users#show'
-
-  namespace :admin do 
-    get '/dashboard', to: 'base#dashboard'
-    resources :items, only: [:index, :edit, :update]
-  end
+  
+  get '/admin/dashboard', to: 'admin/base#dashboard'
+  get '/admin/items', to: 'admin/items#index', as: 'admin_items'
+  patch 'admin/items/:id', to: 'admin/items#update', as: 'admin_item'
+  get '/admin/items/:id/edit', to: 'admin/items#edit', as: 'edit_admin_item'
 
   get '/:category_name', to: 'categories#show', as: 'category'
 end
